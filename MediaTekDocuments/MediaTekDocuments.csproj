@@ -84,7 +84,12 @@
     <Compile Include="manager\ApiRest.cs" />
     <Compile Include="controller\FrmMediatekController.cs" />
     <Compile Include="dal\Access.cs" />
-    <Compile Include="view\FrmMediatek.cs" />
+    <Compile Include="model\Commande.cs" />
+    <Compile Include="model\Suivi.cs" />
+    <Compile Include="view\FrmMediatek.cs">
+      <Generator>Form Designer</Generator>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="view\FrmMediatek.Designer.cs">
       <DependentUpon>FrmMediatek.cs</DependentUpon>
     </Compile>

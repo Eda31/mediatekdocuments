@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MediaTekDocuments.dal;
 using MediaTekDocuments.model;
-using MediaTekDocuments.dal;
+using System.Collections.Generic;
 
 namespace MediaTekDocuments.controller
 {
@@ -95,6 +95,67 @@ namespace MediaTekDocuments.controller
         public bool CreerExemplaire(Exemplaire exemplaire)
         {
             return access.CreerExemplaire(exemplaire);
+        }
+
+        // code ajouter
+
+        /// <summary>
+        /// récupère les commandes d'un livre
+        /// </summary>
+        /// <param name="idDocuement">id du livre concernée</param>
+        /// <returns>Liste d'objets commande</returns>
+        public List<Commande> GetCommandesLivre(string idDocuement)
+        {
+            return access.GetCommandesLivre(idDocuement);
+        }
+
+        /// <summary>
+        /// Crée une commande d'un livre dans la bdd
+        /// </summary>
+        /// <param name="commande">L'objet Commande concerné</param>
+        /// <returns>True si la création a pu se faire</returns>
+        public bool CreerCommande(Commande commande)
+        {
+            return access.CreerCommande(commande);
+        }
+
+        /// <summary>
+        /// Modifier le suivi d'une commande
+        /// </summary>
+        /// <param name="commande">L'objet Commande concerné</param>
+        /// <returns>True si la création a pu se faire</returns>
+        public bool ModifieCommande(Commande commande)
+        {
+            return access.ModifieCommande(commande);
+        }
+
+        /// <summary>
+        /// getter sur les suivis
+        /// </summary>
+        /// <returns></returns>
+        public List<Suivi> GetAllSuivi()
+        {
+            return access.GetAllSuivi();
+        }
+
+        /// <summary>
+        /// Supprimer une commande
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool SupprimerCommande(string id)
+        {
+            return access.SupprimerCommande(id);
+        }
+
+        /// <summary>
+        /// récupère les commandes d'un livre
+        /// </summary>
+        /// <param name="idDocuement">id du livre concernée</param>
+        /// <returns>Liste d'objets commande</returns>
+        public List<Commande> GetCommandesDvd(string idDocuement)
+        {
+            return access.GetCommandesDvd(idDocuement);
         }
     }
 }

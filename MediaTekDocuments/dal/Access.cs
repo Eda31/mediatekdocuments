@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MediaTekDocuments.manager;
 using MediaTekDocuments.model;
-using MediaTekDocuments.manager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using System.Configuration;
+using System;
+using System.Collections.Generic;
 
 namespace MediaTekDocuments.dal
 {
@@ -36,7 +35,7 @@ namespace MediaTekDocuments.dal
         private const string POST = "POST";
         /// <summary>
         /// méthode HTTP pour update
-
+        private const string PUT = "PUT";
         /// <summary>
         /// Méthode privée pour créer un singleton
         /// initialise l'accès à l'API
@@ -62,7 +61,7 @@ namespace MediaTekDocuments.dal
         /// <returns>instance unique de la classe</returns>
         public static Access GetInstance()
         {
-            if(instance == null)
+            if (instance == null)
             {
                 instance = new Access();
             }
@@ -137,7 +136,7 @@ namespace MediaTekDocuments.dal
         /// <returns>Liste d'objets Exemplaire</returns>
         public List<Exemplaire> GetExemplairesRevue(string idDocument)
         {
-            String jsonIdDocument = convertToJson("id", idDocument);
+            String jsonIdDocument = ConvertToJson("id", idDocument);
             List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdDocument);
             return lesExemplaires;
         }
@@ -150,7 +149,8 @@ namespace MediaTekDocuments.dal
         public bool CreerExemplaire(Exemplaire exemplaire)
         {
             String jsonExemplaire = JsonConvert.SerializeObject(exemplaire, new CustomDateTimeConverter());
-            try {
+            try
+            {
                 // récupération soit d'une liste vide (requête ok) soit de null (erreur)
                 List<Exemplaire> liste = TraitementRecup<Exemplaire>(POST, "exemplaire/" + jsonExemplaire);
                 return (liste != null);
@@ -159,7 +159,7 @@ namespace MediaTekDocuments.dal
             {
                 Console.WriteLine(ex.Message);
             }
-            return false; 
+            return false;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace MediaTekDocuments.dal
         /// <param name="methode">verbe HTTP (GET, POST, PUT, DELETE)</param>
         /// <param name="message">information envoyée</param>
         /// <returns>liste d'objets récupérés (ou liste vide)</returns>
-        private List<T> TraitementRecup<T> (String methode, String message)
+        private List<T> TraitementRecup<T>(String methode, String message)
         {
             List<T> liste = new List<T>();
             try
@@ -191,9 +191,10 @@ namespace MediaTekDocuments.dal
                 {
                     Console.WriteLine("code erreur = " + code + " message = " + (String)retour["message"]);
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
-                Console.WriteLine("Erreur lors de l'accès à l'API : "+e.Message);
+                Console.WriteLine("Erreur lors de l'accès à l'API : " + e.Message);
                 Environment.Exit(0);
             }
             return liste;
@@ -205,7 +206,7 @@ namespace MediaTekDocuments.dal
         /// <param name="nom"></param>
         /// <param name="valeur"></param>
         /// <returns>couple au format json</returns>
-        private String convertToJson(Object nom, Object valeur)
+        private String ConvertToJson(Object nom, Object valeur)
         {
             Dictionary<Object, Object> dictionary = new Dictionary<Object, Object>();
             dictionary.Add(nom, valeur);
@@ -240,6 +241,150 @@ namespace MediaTekDocuments.dal
                 serializer.Serialize(writer, value);
             }
         }
+
+        // code ajouter
+
+        /// <summary>
+        /// Retourne les commandes des livres
+        /// </summary>
+        /// <param name="idDocument">id du livre concernée</param>
+        /// <returns>Liste d'objets Commande</returns>
+        public List<Commande> GetCommandesLivre(string idDocument)
+        {
+            String jsonIdDocument = ConvertToJson("id", idDocument);
+            List<Commande> lesCommandes = TraitementRecup<Commande>(GET, "commande/" + jsonIdDocument);
+            return lesCommandes;
+        }
+
+        /// <summary>
+        /// ecriture d'une commande en base de données
+        /// </summary>
+        /// <param name="commande">commande à insérer</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool CreerCommande(Commande commande)
+        {
+            // Sérialisation de l'objet commande en JSON
+            String jsonCommande = JsonConvert.SerializeObject(commande, new CustomDateTimeConverter());
+
+            try
+            {
+                // Envoi de la requête POST avec les données de la commande
+                List<Commande> liste = TraitementRecup<Commande>(POST, "commande/" + jsonCommande);
+
+                // Vérification et retour du résultat de l'insertion
+                if (liste != null)
+                {
+                    Console.WriteLine("Insertion de la commande réussie.");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Échec de l'insertion de la commande.");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Affichage des erreurs pour le débogage
+                Console.WriteLine("Erreur lors de l'insertion de la commande: " + ex.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Modification d'une commande en base de données
+        /// </summary>
+        /// <param name="commande">commande à modifier</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool ModifieCommande(Commande commande)
+        {
+            // Convertir l'objet commande en JSON
+            String jsonCommande = JsonConvert.SerializeObject(commande, new CustomDateTimeConverter());
+
+            try
+            {
+                // Créer l'URL avec l'ID de la commande
+                string url = "commande/" + commande.Id +"/";
+
+                // Afficher l'URL et les données JSON pour le débogage
+                Console.WriteLine($"URL envoyée à l'API : {uriApi}{url}{jsonCommande}");
+
+                // Envoyer la requête PUT avec les données de la commande
+                List<Commande> liste = TraitementRecup<Commande>(PUT, url + jsonCommande);
+
+                // Vérifier la réponse
+                return (liste != null);
+            }
+            catch (Exception ex)
+            {
+                // Afficher l'exception pour le débogage
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Retourne toutes les étapes de suivi à partir de la BDD
+        /// </summary>
+        /// <returns></returns>
+        public List<Suivi> GetAllSuivi()
+        {
+            IEnumerable<Suivi> lesSuivis = TraitementRecup<Suivi>(GET, "suivi");
+            return new List<Suivi>(lesSuivis);
+        }
+
+        /// <summary>
+        /// Supprime une commande dans la BDD
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool SupprimerCommande(string id)
+        {
+            string jsonId = ConvertToJson("id", id);
+            try
+            {
+                var jsonResponse = api.RecupDistant("DELETE", "commande/" + jsonId);
+                if (jsonResponse != null)
+                {
+                    var code = (int)jsonResponse["code"];
+                    var message = (string)jsonResponse["message"];
+                    Console.WriteLine($"Code de réponse: {code}, Message: {message}");
+
+                    if (code == 200)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Erreur lors de la suppression de la commande : {message}", "Erreur");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Erreur de connexion à l'API");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Retourne les commandes de dvd
+        /// </summary>
+        /// <param name="idDocument">id du dvd concernée</param>
+        /// <returns>Liste d'objets Commande</returns>
+        public List<Commande> GetCommandesDvd(string idDocument)
+        {
+            String jsonIdDocument = ConvertToJson("id", idDocument);
+            List<Commande> lesCommandesDvd = TraitementRecup<Commande>(GET, "commande/" + jsonIdDocument);
+            return lesCommandesDvd;
+        }
+
 
     }
 }
