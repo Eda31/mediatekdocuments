@@ -1409,7 +1409,7 @@ namespace MediaTekDocuments.view
         }
 
         /// <summary>
-        /// Remplit le DataGridView des commandes avec la liste reçue en paramètre
+        /// Remplit le DataGridView des commandes avec le tri demandé
         /// </summary>
         /// <param name="commandes">liste de commandes</param>
         private void DgvReceptionCommandesListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
