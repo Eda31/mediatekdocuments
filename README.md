@@ -46,10 +46,42 @@ Il est possible alors de réceptionner une nouvelle parution en saisissant son n
 Le clic sur "Valider la réception" va permettre d'ajouter un tuple dans la table Exemplaire de la BDD. La parution correspondante apparaitra alors automatiquement dans la liste des parutions et les zones de la partie "Nouvelle parution réceptionnée pour cette revue" seront réinitialisées.<br>
 Si le numéro de la parution existe déjà, il n’est pas ajouté et un message est affiché.
 ![img3](https://github.com/CNED-SLAM/MediaTekDocuments/assets/100127886/225e10f2-406a-4b5e-bfa9-368d45456056)
+### Onglet 5 : Commandes de Livres
+Cet onglet présente la liste des commandes de livres.<br>
+<img width="553" alt="application" src="https://github.com/Eda31/mediatekdocuments/assets/123643875/b9634a82-f310-4973-819c-eadae3af05d0">
+#### Recherches
+<strong>Par le numéro :</strong> il est possible de saisir un numéro et, en cliquant sur "Rechercher", seul les commandes du livre concerné apparait dans la liste (ou un message d'erreur si le livre n'est pas trouvé, avec la liste remplie à nouveau).
+#### Tris
+Le fait de cliquer sur le titre d'une des colonnes de la liste des commandes du livre, permet de trier la liste par rapport à la colonne choisie.
+#### Affichage des informations détaillées
+Si la liste des commandes contient des éléments, par défaut il y en a toujours un de sélectionné. Il est aussi possible de sélectionner une ligne (donc une commande) en cliquant n'importe où sur la ligne.<br>
+La partie haute de la fenêtre affiche les informations détaillées du livre sélectionné (numéro de document, code ISBN, titre, auteur(e), collection, genre, public, rayon, chemin de l'image) ainsi que l'image.
+#### Ajouter une commande
+Pour ajouter une nouvelle commande, remplir les champs nécessaires dans la section "Ajouter une commande". Les informations requises incluent le numéro de commande, la date de commande, le montant, le nombre d'exemplaires et le numéro du livre. Une fois tous les champs complétés, cliquer sur le bouton "Ajouter" pour enregistrer la commande dans la base de données.
+#### Modifier l'étape du suivi d'une commande
+Pour modifier l'étape du suivi d'une commande, sélectionner la commande dans la liste, choisir la nouvelle étape dans le menu déroulant "Étape de suivi" et cliquer sur "Modifier". Cela mettra à jour l'étape du suivi de la commande dans la base de données.
+#### Bouton supprimer
+Pour supprimer une commande, sélectionner la commande dans la liste puis cliquer sur le bouton "Supprimer". La commande sera définitivement supprimée de la liste et de la base de données.
+### Onglet 6 : Commandes de Dvds
+Cet onglet présente la liste des commandes de DVDs et est similaire a l'onglet précedent.
+#### Recherches
+<strong>Par le numéro :</strong> Il est possible de saisir un numéro et, en cliquant sur "Rechercher", seules les commandes du DVD concerné apparaissent dans la liste (ou un message d'erreur si le DVD n'est pas trouvé, avec la liste remplie à nouveau).
+#### Tris
+Le fait de cliquer sur le titre d'une des colonnes de la liste des commandes du DVD permet de trier la liste par rapport à la colonne choisie.
+#### Affichage des informations détaillées
+Si la liste des commandes contient des éléments, par défaut il y en a toujours un de sélectionné. Il est aussi possible de sélectionner une ligne (donc une commande) en cliquant n'importe où sur la ligne. La partie haute de la fenêtre affiche les informations détaillées du DVD sélectionné (numéro de document, titre, réalisateur, genre, public, rayon, chemin de l'image) ainsi que l'image.
+#### Ajouter une commande
+Pour ajouter une nouvelle commande, remplir les champs nécessaires dans la section "Ajouter une commande". Les informations requises incluent le numéro de commande, la date de commande, le montant, le nombre d'exemplaires et le numéro du DVD. Une fois tous les champs complétés, cliquer sur le bouton "Ajouter" pour enregistrer la commande dans la base de données.
+#### Modifier l'étape du suivi d'une commande
+Pour modifier l'étape du suivi d'une commande, sélectionner la commande dans la liste, choisir la nouvelle étape dans le menu déroulant "Étape de suivi" et cliquer sur "Modifier". Cela mettra à jour l'étape du suivi de la commande dans la base de données.
+#### Bouton supprimer
+Pour supprimer une commande, sélectionner la commande dans la liste puis cliquer sur le bouton "Supprimer". La commande sera définitivement supprimée de la liste et de la base de données.
 ## La base de données
 La base de données 'mediatek86 ' est au format MySQL.<br>
-Voici sa structure :<br>
+Voici son ancienne structure :<br>
 ![img4](https://github.com/CNED-SLAM/MediaTekDocuments/assets/100127886/4314f083-ec8b-4d27-9746-fecd1387d77b)
+Voici sa nouvelle structure :<br>
+<img width="418" alt="bdd modifier" src="https://github.com/Eda31/mediatekdocuments/assets/123643875/6b3eb689-2a6d-4cab-886a-18dddde5c0dd">
 <br>On distingue les documents "génériques" (ce sont les entités Document, Revue, Livres-DVD, Livre et DVD) des documents "physiques" qui sont les exemplaires de livres ou de DVD, ou bien les numéros d’une revue ou d’un journal.<br>
 Chaque exemplaire est numéroté à l’intérieur du document correspondant, et a donc un identifiant relatif. Cet identifiant est réel : ce n'est pas un numéro automatique. <br>
 Un exemplaire est caractérisé par :<br>
@@ -63,8 +95,9 @@ Un livre a aussi pour identifiant son numéro de document, possède un code ISBN
 De même, un DVD est aussi identifié par son numéro de document, et possède un synopsis, un réalisateur et une durée. Les réalisateurs ne sont pas gérés dans une table séparée (c’est un simple champ texte dans la table DVD).
 Enfin, 3 tables permettent de mémoriser les données concernant les commandes de livres ou DVD et les abonnements. Une commande est effectuée à une date pour un certain montant. Un abonnement est une commande qui a pour propriété complémentaire la date de fin de l’abonnement : il concerne une revue.  Une commande de livre ou DVD a comme caractéristique le nombre d’exemplaires commandé et concerne donc un livre ou un DVD.<br>
 <br>
-La base de données est remplie de quelques exemples pour pouvoir tester son application. Dans les champs image (de Document) et photo (de Exemplaire) doit normalement se trouver le chemin complet vers l'image correspondante. Pour les tests, vous devrez créer un dossier, le remplir de quelques images et mettre directement les chemins dans certains tuples de la base de données qui, pour le moment, ne contient aucune image.<br>
-Lorsque l'application sera opérationnelle, c'est le personnel de la médiathèque qui sera en charge de saisir les informations des documents.
+La base de données est remplie de quelques exemples pour pouvoir tester l'application. Dans les champs image (de Document) et photo (de Exemplaire) doit normalement se trouver le chemin complet vers l'image correspondante. Pour les tests, vous devrez créer un dossier, le remplir de quelques images et mettre directement les chemins dans certains tuples de la base de données qui, pour le moment, ne contient aucune image.<br>
+Lorsque l'application sera opérationnelle, c'est le personnel de la médiathèque qui sera en charge de saisir les informations des documents.<br>
+En ajoutant ces éléments, vous couvrez non seulement la structure de la base de données mais aussi les récentes modifications et améliorations apportées, ce qui peut être crucial pour les utilisateurs finaux ou les développeurs qui travailleront sur ce projet à l'avenir.<br>
 ## L'API REST
 L'accès à la BDD se fait à travers une API REST protégée par une authentification basique.<br>
 Le code de l'API se trouve ici :<br>
